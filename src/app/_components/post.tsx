@@ -6,6 +6,7 @@ import { api } from "~/trpc/react";
 
 export function LatestPost() {
   const [latestPost] = api.post.getLatest.useSuspenseQuery();
+  const [latestPostFromAnyUser] = api.post.getLatestFromAnyUser.useSuspenseQuery();
 
   const utils = api.useUtils();
   const [name, setName] = useState("");
@@ -22,6 +23,11 @@ export function LatestPost() {
         <p className="truncate">Your most recent post: {latestPost.name}</p>
       ) : (
         <p>You have no posts yet.</p>
+      )}
+      {latestPostFromAnyUser && (
+        <p className="truncate">
+          The most recent post {latestPostFromAnyUser.createdBy?.name ? "by " + latestPostFromAnyUser.createdBy.name : ""}: {latestPostFromAnyUser.name}
+        </p>
       )}
       <form
         onSubmit={(e) => {

@@ -34,6 +34,14 @@ export const postRouter = createTRPCRouter({
 
     return post ?? null;
   }),
+  getLatestFromAnyUser: protectedProcedure.query(async ({ ctx }) => {
+    const post = await ctx.db.post.findFirst({
+      orderBy: { createdAt: "desc" },
+      include: { createdBy: true },
+    });
+
+    return post ?? null;
+  }),
 
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
